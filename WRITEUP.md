@@ -1,59 +1,34 @@
 # Project Write-Up
 
-You can use this document as a template for providing your project write-up. However, if you
-have a different format you prefer, feel free to use it as long as you answer all required
-questions.
+This documentation explain some of the details of the performance and model conversion/selection
 
 ## Explaining Custom Layers
 
-The process behind converting custom layers involves...
-
-Some of the potential reasons for handling custom layers are...
+The IR model used is converted from trained TensorFlow SSD MobileNet V2 COCO model. No custom layers handling is required, as the IR model's layers is fully supported by the OpenVino engine and it's CPU extension
 
 ## Comparing Model Performance
 
-My method(s) to compare models before and after conversion to Intermediate Representations
-were...
+My method(s) to compare models before and after conversion to Intermediate Representations were running both models manually and record their inference time, and accuracy
 
-The difference between model accuracy pre- and post-conversion was...
+The difference between model accuracy pre- and post-conversion was 0.85 and 0.72
 
-The size of the model pre- and post-conversion was...
+The size of the model pre- and post-conversion was 122MB and 65MB
 
-The inference time of the model pre- and post-conversion was...
+The inference time of the model pre- and post-conversion was roughly 0.005 and 0.02 seconds
+
+There will be significant cost/charges and network involved if the similar solution is done using cloud services. Data/Image from the camera is required to transmit to cloud, in order to do inference, which incurred some latency. Using edge to do inference locally will remove unnecessary data travel, with contribute to much better inference performance.
 
 ## Assess Model Use Cases
 
-Some of the potential use cases of the people counter app are...
+Some of the potential use cases of the people counter app are manufacturing smart monitoring system to monitor the people flow in the production line, and retail queueing system to monitor customer's queue
 
-Each of these use cases would be useful because...
+Each of these use cases would be useful because it's allow to detect people flow, and act accordingly, by redirect customer to not fully occupied queue in case of retail queueing system, or inform on-duty-manager to distribute more workers on more busy production line.
 
 ## Assess Effects on End User Needs
 
 Lighting, model accuracy, and camera focal length/image size have different effects on a
-deployed edge model. The potential effects of each of these are as follows...
+deployed edge model. The potential effects of each of these are as follows:-
 
-## Model Research
-
-[This heading is only required if a suitable model was not found after trying out at least three
-different models. However, you may also use this heading to detail how you converted 
-a successful model.]
-
-In investigating potential people counter models, I tried each of the following three models:
-
-- Model 1: [Name]
-  - [Model Source]
-  - I converted the model to an Intermediate Representation with the following arguments...
-  - The model was insufficient for the app because...
-  - I tried to improve the model for the app by...
-  
-- Model 2: [Name]
-  - [Model Source]
-  - I converted the model to an Intermediate Representation with the following arguments...
-  - The model was insufficient for the app because...
-  - I tried to improve the model for the app by...
-
-- Model 3: [Name]
-  - [Model Source]
-  - I converted the model to an Intermediate Representation with the following arguments...
-  - The model was insufficient for the app because...
-  - I tried to improve the model for the app by...
+1) IR model performance may varies on different ambient lighting environment (eg. light vs dark)
+2) Model accuracy may dropped slightly when converted to IR model, and further reduced when using quantization to reduce the IR model's size
+3) The IR model is expecting the input images to have certain width and height. Image reprocessing is required to transform images (shape and cropping) before feeding into the model
